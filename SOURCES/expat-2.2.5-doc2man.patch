@@ -1,0 +1,26 @@
+diff -uap libexpat-R_2_2_5/expat/configure.ac.doc2man libexpat-R_2_2_5/expat/configure.ac
+--- libexpat-R_2_2_5/expat/configure.ac.doc2man
++++ libexpat-R_2_2_5/expat/configure.ac
+@@ -241,7 +241,7 @@ AS_IF([test "x$with_docbook" != xno],
+   [if test "x$with_docbook" != xcheck; then 
+     AC_MSG_ERROR([Required program 'docbook2x-man' not found.])])])
+ 
+-AM_CONDITIONAL(WITH_DOCBOOK, [test x${DOCBOOK_TO_MAN} != x])
++AM_CONDITIONAL(WITH_DOCBOOK, [test "x${DOCBOOK_TO_MAN}" != x])
+ 
+ AC_CONFIG_FILES([Makefile expat.pc])
+ AC_CONFIG_FILES([
+diff -uap libexpat-R_2_2_5/expat/doc/Makefile.am.doc2man libexpat-R_2_2_5/expat/doc/Makefile.am
+--- libexpat-R_2_2_5/expat/doc/Makefile.am.doc2man
++++ libexpat-R_2_2_5/expat/doc/Makefile.am
+@@ -32,8 +32,9 @@ dist_man_MANS = xmlwf.1
+ 
+ xmlwf.1: xmlwf.xml
+ if WITH_DOCBOOK
++	-rm -f $@
+ 	$(DOCBOOK_TO_MAN) $<
+-	mv XMLWF.1 $@
++	test -f $@ || mv XMLWF.1 $@
+ else
+ 	@echo 'ERROR: Configure with --with-docbook for "make dist".' 1>&2
+ 	@false

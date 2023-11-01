@@ -1,0 +1,38 @@
+commit 835df27bc1a1eae1ec51b14122ea40c974dd7409
+Author: Tomas Korbar <tkorbar@redhat.com>
+Date:   Mon Feb 14 12:29:20 2022 +0100
+
+    CVE-2021-46143
+
+diff --git a/lib/xmlparse.c b/lib/xmlparse.c
+index c45be0c..22d0a75 100644
+--- a/lib/xmlparse.c
++++ b/lib/xmlparse.c
+@@ -4995,6 +4995,11 @@ doProlog(XML_Parser parser, const ENCODING *enc, const char *s, const char *end,
+     case XML_ROLE_GROUP_OPEN:
+       if (parser->m_prologState.level >= parser->m_groupSize) {
+         if (parser->m_groupSize) {
++          /* Detect and prevent integer overflow */
++          if (parser->m_groupSize > (unsigned int)(-1) / 2u) {
++            return XML_ERROR_NO_MEMORY;
++          }
++
+           char *temp = (char *)REALLOC(parser, parser->m_groupConnector, parser->m_groupSize *= 2);
+           if (temp == NULL) {
+             parser->m_groupSize /= 2;
+@@ -5002,6 +5007,15 @@ doProlog(XML_Parser parser, const ENCODING *enc, const char *s, const char *end,
+           }
+           parser->m_groupConnector = temp;
+           if (dtd->scaffIndex) {
++            /* Detect and prevent integer overflow.
++             * The preprocessor guard addresses the "always false" warning
++             * from -Wtype-limits on platforms where
++             * sizeof(unsigned int) < sizeof(size_t), e.g. on x86_64. */
++#if UINT_MAX >= SIZE_MAX
++            if (parser->m_groupSize > (size_t)(-1) / sizeof(int)) {
++              return XML_ERROR_NO_MEMORY;
++            }
++#endif
+             int *temp = (int *)REALLOC(parser, dtd->scaffIndex,
+                           parser->m_groupSize * sizeof(int));
+             if (temp == NULL)
