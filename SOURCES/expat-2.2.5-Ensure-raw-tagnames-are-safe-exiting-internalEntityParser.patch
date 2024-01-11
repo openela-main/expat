@@ -1,0 +1,118 @@
+commit bfecc1f11ab5f0cc2aa3dc5cb87d3236a87ce61d
+Author: Tomas Korbar <tkorbar@redhat.com>
+Date:   Fri Sep 30 10:52:04 2022 +0200
+
+    Fix CVE-2022-40674
+
+diff --git a/lib/xmlparse.c b/lib/xmlparse.c
+index d47e42c..0cc24f6 100644
+--- a/lib/xmlparse.c
++++ b/lib/xmlparse.c
+@@ -5765,8 +5765,14 @@ internalEntityProcessor(XML_Parser parser,
+   {
+     parser->m_processor = contentProcessor;
+     /* see externalEntityContentProcessor vs contentProcessor */
+-    return doContent(parser, parser->m_parentParser ? 1 : 0, parser->m_encoding, s, end,
+-                     nextPtr, (XML_Bool)!parser->m_parsingStatus.finalBuffer);
++    result = doContent(parser, parser->m_parentParser ? 1 : 0, parser->m_encoding,
++                      s, end, nextPtr,
++                      (XML_Bool)! parser->m_parsingStatus.finalBuffer);
++    if (result == XML_ERROR_NONE) {
++      if (! storeRawNames(parser))
++        return XML_ERROR_NO_MEMORY;
++    }
++    return result;
+   }
+ }
+ 
+diff --git a/tests/runtests.c b/tests/runtests.c
+index 569ad8c..f3ebbd7 100644
+--- a/tests/runtests.c
++++ b/tests/runtests.c
+@@ -5401,6 +5401,78 @@ START_TEST(test_resume_entity_with_syntax_error)
+ }
+ END_TEST
+ 
++void
++suspending_comment_handler(void *userData, const XML_Char *UNUSED_P(data)) {
++  XML_Parser parser = (XML_Parser)userData;
++  XML_StopParser(parser, XML_TRUE);
++}
++
++START_TEST(test_suspend_resume_internal_entity_issue_629) {
++  const char *const text
++      = "<!DOCTYPE a [<!ENTITY e '<!--COMMENT-->a'>]><a>&e;<b>\n"
++        "<"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
++        "/>"
++        "</b></a>";
++  const size_t firstChunkSizeBytes = 54;
++
++  XML_Parser parser = XML_ParserCreate(NULL);
++  XML_SetUserData(parser, parser);
++  XML_SetCommentHandler(parser, suspending_comment_handler);
++
++  if (XML_Parse(parser, text, (int)firstChunkSizeBytes, XML_FALSE)
++      != XML_STATUS_SUSPENDED)
++    xml_failure(parser);
++  if (XML_ResumeParser(parser) != XML_STATUS_OK)
++    xml_failure(parser);
++  if (XML_Parse(parser, text + firstChunkSizeBytes,
++                (int)(strlen(text) - firstChunkSizeBytes), XML_TRUE)
++      != XML_STATUS_OK)
++    xml_failure(parser);
++  XML_ParserFree(parser);
++}
++END_TEST
++
++
+ /* Test suspending and resuming in a parameter entity substitution */
+ static void XMLCALL
+ element_decl_suspender(void *UNUSED_P(userData),
+@@ -12395,6 +12467,7 @@ make_suite(void)
+     tcase_add_test(tc_basic, test_hash_collision);
+     tcase_add_test(tc_basic, test_suspend_resume_internal_entity);
+     tcase_add_test(tc_basic, test_resume_entity_with_syntax_error);
++    tcase_add_test(tc_basic, test_suspend_resume_internal_entity_issue_629);
+     tcase_add_test(tc_basic, test_suspend_resume_parameter_entity);
+     tcase_add_test(tc_basic, test_restart_on_error);
+     tcase_add_test(tc_basic, test_reject_lt_in_attribute_value);
