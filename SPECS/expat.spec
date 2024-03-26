@@ -3,12 +3,16 @@
 Summary: An XML parser library
 Name: expat
 Version: %(echo %{unversion} | sed 's/_/./g')
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 Source: https://github.com/libexpat/libexpat/archive/R_%{unversion}.tar.gz#/expat-%{version}.tar.gz
 URL: https://libexpat.github.io/
 License: MIT
 BuildRequires: autoconf, libtool, xmlto, gcc-c++
 BuildRequires: make
+# https://issues.redhat.com/browse/RHEL-24227
+Patch0: expat-2.5.0-CVE-2023-52425.patch
+# https://issues.redhat.com/browse/RHEL-28700
+Patch1: expat-2.5.0-CVE-2024-28757.patch
 
 %description
 This is expat, the C library for parsing XML, written by James Clark. Expat
@@ -36,6 +40,10 @@ Install it if you need to link statically with expat.
 
 %prep
 %setup -q -n libexpat-R_%{unversion}/expat
+pushd ..
+%patch0 -p1 -b .CVE-2023-52425
+%patch1 -p1 -b .CVE-2024-28757
+popd
 
 sed -i 's/install-data-hook/do-nothing-please/' lib/Makefile.am
 ./buildconf.sh
@@ -52,6 +60,15 @@ export DOCBOOK_TO_MAN="xmlto man --skip-validation"
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 
 %check
+bash -c "for i in {1..500000}; do printf AAAAAAAAAAAAAAAAAAAA >> achars.txt; done"
+for testfile in ../testdata/largefiles/aaaaaa_*; do
+	first_part="$(sed 's/\(.*\)ACHARS.*/\1/g' $testfile)"
+	second_part="$(sed 's/.*ACHARS\(.*\)/\1/g' $testfile)"
+	printf "$first_part" > "$testfile"
+	cat achars.txt >> "$testfile"
+	printf "$second_part" >> "$testfile"
+done
+
 make check
 
 %ldconfig_scriptlets
@@ -74,6 +91,12 @@ make check
 %{_libdir}/lib*.a
 
 %changelog
+* Tue Feb 13 2024 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-1.1
+- CVE-2023-52425: Fix parsing of large tokens
+- CVE-2024-28757: Reject direct parameter entity recursion
+- Resolves: RHEL-29698
+- Resolves: RHEL-29695
+
 * Thu Nov 10 2022 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-1
 - Rebase to version 2.5.0
 - Resolves: CVE-2022-43680
