@@ -3,7 +3,7 @@
 Summary: An XML parser library
 Name: expat
 Version: %(echo %{unversion} | sed 's/_/./g')
-Release: 1%{?dist}.1
+Release: 2%{?dist}
 Source: https://github.com/libexpat/libexpat/archive/R_%{unversion}.tar.gz#/expat-%{version}.tar.gz
 URL: https://libexpat.github.io/
 License: MIT
@@ -91,11 +91,11 @@ make check
 %{_libdir}/lib*.a
 
 %changelog
-* Tue Feb 13 2024 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-1.1
-- CVE-2023-52425: Fix parsing of large tokens
-- CVE-2024-28757: Reject direct parameter entity recursion
-- Resolves: RHEL-29698
-- Resolves: RHEL-29695
+* Tue Feb 13 2024 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-2
+- Fix parsing of large tokens
+- Reject direct parameter entity recursion
+- Resolves: RHEL-29699
+- Resolves: RHEL-29696
 
 * Thu Nov 10 2022 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-1
 - Rebase to version 2.5.0
