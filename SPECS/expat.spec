@@ -3,7 +3,7 @@
 Summary: An XML parser library
 Name: expat
 Version: %(echo %{unversion} | sed 's/_/./g')
-Release: 11%{?dist}.1
+Release: 13%{?dist}
 Source: https://github.com/libexpat/libexpat/archive/R_%{unversion}.tar.gz#/expat-%{version}.tar.gz
 URL: https://libexpat.github.io/
 License: MIT
@@ -114,9 +114,13 @@ make check
 %{_libdir}/lib*.a
 
 %changelog
-* Mon Mar 25 2024 Tomas Korbar <tkorbar@redhat.com> - 2.2.5-11.1
+* Tue Mar 26 2024 Tomas Korbar <tkorbar@redhat.com - 2.2.5-13
+- Fix wrongly exposed variables
+- Resolves: RHEL-29321
+
+* Thu Mar 21 2024 Tomas Korbar <tkorbar@redhat.com> - 2.2.5-12
 - CVE-2023-52425 expat: parsing large tokens can trigger a denial of service
-- Resolves: RHEL-29320
+- Resolves: RHEL-29321
 
 * Mon Nov 14 2022 Tomas Korbar <tkorbar@redhat.com> - 2.2.5-11
 - CVE-2022-43680 expat: use-after free caused by overeager destruction of a shared DTD in XML_ExternalEntityParserCreate
