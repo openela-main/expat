@@ -3,7 +3,7 @@
 Summary: An XML parser library
 Name: expat
 Version: %(echo %{unversion} | sed 's/_/./g')
-Release: 2%{?dist}.1
+Release: 3%{?dist}.1
 Source: https://github.com/libexpat/libexpat/archive/R_%{unversion}.tar.gz#/expat-%{version}.tar.gz
 URL: https://libexpat.github.io/
 License: MIT
@@ -13,12 +13,14 @@ BuildRequires: make
 Patch0: expat-2.5.0-CVE-2023-52425.patch
 # https://issues.redhat.com/browse/RHEL-28700
 Patch1: expat-2.5.0-CVE-2024-28757.patch
-# https://issues.redhat.com/browse/RHEL-56763
+# https://issues.redhat.com/browse/RHEL-56761
 Patch2: expat-2.5.0-CVE-2024-45490.patch
-# https://issues.redhat.com/browse/RHEL-57497
+# https://issues.redhat.com/browse/RHEL-57520
 Patch3: expat-2.5.0-CVE-2024-45491.patch
-# https://issues.redhat.com/browse/RHEL-57510
+# https://issues.redhat.com/browse/RHEL-57511
 Patch4: expat-2.5.0-CVE-2024-45492.patch
+# https://issues.redhat.com/browse/RHEL-65064
+Patch5: expat-2.5.0-CVE-2024-50602.patch
 
 %description
 This is expat, the C library for parsing XML, written by James Clark. Expat
@@ -52,6 +54,7 @@ pushd ..
 %patch2 -p1 -b .CVE-2024-45490
 %patch3 -p1 -b .CVE-2024-45491
 %patch4 -p1 -b .CVE-2024-45492
+%patch5 -p1 -b .CVE-2024-50602
 popd
 
 sed -i 's/install-data-hook/do-nothing-please/' lib/Makefile.am
@@ -100,14 +103,15 @@ make check
 %{_libdir}/lib*.a
 
 %changelog
-* Wed Sep 11 2024 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-2.1
-- Fix multiple CVEs
-- Fix CVE-2024-45492 integer overflow
-- Fix CVE-2024-45491 Integer Overflow or Wraparound
-- Fix CVE-2024-45490 Negative Length Parsing Vulnerability
-- Resolves: RHEL-57510
-- Resolves: RHEL-57497
-- Resolves: RHEL-56763
+* Thu Nov 07 2024 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-3.1
+- Fix CVE-2024-50602
+- Resolves: RHEL-65064
+
+* Wed Oct 09 2024 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-3
+- Fix CVE-2024-45490, CVE-2024-45491, CVE-2024-45492
+- Resolves: RHEL-56761
+- Resolves: RHEL-57520
+- Resolves: RHEL-57511
 
 * Tue Feb 13 2024 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-2
 - Fix parsing of large tokens
