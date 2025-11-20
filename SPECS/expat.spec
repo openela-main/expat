@@ -1,33 +1,30 @@
-%global unversion 2_2_5
+%global unversion 2_5_0
 
 Summary: An XML parser library
 Name: expat
 Version: %(echo %{unversion} | sed 's/_/./g')
-Release: 17%{?dist}
+Release: 1%{?dist}
 Source: https://github.com/libexpat/libexpat/archive/R_%{unversion}.tar.gz#/expat-%{version}.tar.gz
 URL: https://libexpat.github.io/
 License: MIT
 BuildRequires: autoconf, libtool, xmlto, gcc-c++
-Patch0: expat-2.2.5-doc2man.patch
-Patch1: expat-2.2.5-CVE-2018-20843.patch
-Patch2: expat-2.2.5-CVE-2019-15903.patch
-Patch3:	expat-2.2.5-Detect-and-prevent-integer-overflow-in-XML_GetBuffer.patch
-Patch4:	expat-2.2.5-Detect-and-prevent-troublesome-left-shifts.patch
-Patch5:	expat-2.2.5-Prevent-integer-overflow-on-m_groupSize-in-function.patch
-Patch6:	expat-2.2.5-Prevent-more-integer-overflows.patch
-Patch7: expat-2.2.5-Protect-against-malicious-namespace-declarations.patch
-Patch8: expat-2.2.5-Add-missing-validation-of-encoding.patch
-Patch9: expat-2.2.5-Prevent-integer-overflow-in-storeRawNames.patch
-Patch10: expat-2.2.5-Prevent-integer-overflow-in-copyString.patch
-Patch11: expat-2.2.5-Prevent-stack-exhaustion-in-build_model.patch
-Patch12: expat-2.2.5-Ensure-raw-tagnames-are-safe-exiting-internalEntityParser.patch
-Patch13: expat-2.2.5-CVE-2022-43680.patch
-Patch14: expat-2.2.5-CVE-2023-52425.patch
-Patch15: expat-2.2.5-CVE-2024-45490.patch
-Patch16: expat-2.2.5-CVE-2024-45491.patch
-Patch17: expat-2.2.5-CVE-2024-45492.patch
-Patch18: expat-2.2.5-CVE-2024-50602.patch
-Patch19: expat-2.2.5-CVE-2024-8176.patch
+BuildRequires: make
+# https://issues.redhat.com/browse/RHEL-24227
+Patch0: expat-2.5.0-CVE-2023-52425.patch
+# https://issues.redhat.com/browse/RHEL-28700
+Patch1: expat-2.5.0-CVE-2024-28757.patch
+# https://issues.redhat.com/browse/RHEL-56761
+Patch2: expat-2.5.0-CVE-2024-45490.patch
+# https://issues.redhat.com/browse/RHEL-57520
+Patch3: expat-2.5.0-CVE-2024-45491.patch
+# https://issues.redhat.com/browse/RHEL-57511
+Patch4: expat-2.5.0-CVE-2024-45492.patch
+# https://issues.redhat.com/browse/RHEL-65066
+Patch5: expat-2.5.0-CVE-2024-50602.patch
+# https://issues.redhat.com/browse/RHEL-57489
+Patch6: expat-2.5.0-CVE-2024-8176.patch
+# https://issues.redhat.com/browse/RHEL-114618
+Patch7: expat-2.5.0-CVE-2025-59375.patch
 
 %description
 This is expat, the C library for parsing XML, written by James Clark. Expat
@@ -55,27 +52,15 @@ Install it if you need to link statically with expat.
 
 %prep
 %setup -q -n libexpat-R_%{unversion}/expat
-%patch0 -p2 -b .doc2man
-%patch1 -p2 -b .cve20843
-%patch2 -p2 -b .cve15903
-%patch3 -p1 -b .CVE-2022-23852
-%patch4 -p1 -b .CVE-2021-45960
-%patch5 -p1 -b .CVE-2021-46143
-%patch6 -p1 -b .CVE-2022-22822-CVE-2022-22827
-%patch7 -p1 -b .CVE-2022-25236
-%patch8 -p1 -b .CVE-2022-25235
-%patch9 -p1 -b .CVE-2022-25315
-%patch10 -p1 -b .CVE-2022-25314
-%patch11 -p1 -b .CVE-2022-25313
-%patch12 -p1 -b .CVE-2022-40674
-%patch13 -p1 -b .CVE-2022-43680
 pushd ..
-%patch14 -p1 -b .CVE-2023-52425
-%patch15 -p1 -b .CVE-2024-45490
-%patch16 -p1 -b .CVE-2024-45491
-%patch17 -p1 -b .CVE-2024-45492
-%patch18 -p1 -b .CVE-2024-50602
-%patch19 -p1 -b .CVE-2024-8176
+%patch0 -p1 -b .CVE-2023-52425
+%patch1 -p1 -b .CVE-2024-28757
+%patch2 -p1 -b .CVE-2024-45490
+%patch3 -p1 -b .CVE-2024-45491
+%patch4 -p1 -b .CVE-2024-45492
+%patch5 -p1 -b .CVE-2024-50602
+%patch6 -p1 -b .CVE-2024-8176
+%patch7 -p1 -b .CVE-2025-59375
 popd
 
 sed -i 's/install-data-hook/do-nothing-please/' lib/Makefile.am
@@ -115,15 +100,21 @@ make check
 %{_mandir}/*/*
 
 %files devel
-%doc doc/reference.html doc/*.png doc/*.css examples/*.c
+%doc doc/reference.html doc/*.css examples/*.c
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*.pc
 %{_includedir}/*.h
+%{_libdir}/cmake/expat-%{version}
 
 %files static
 %{_libdir}/lib*.a
 
 %changelog
+* Wed Nov 19 2025 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-1
+- Rebase to version 2.5.0
+- Fix CVE-2025-59375
+- Resolves: RHEL-114618
+
 * Mon Apr 07 2025 Tomas Korbar <tkorbar@redhat.com> - 2.2.5-17
 - Fix CVE-2024-8176
 - Resolves: RHEL-57477
