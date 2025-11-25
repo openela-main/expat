@@ -1,4 +1,4 @@
-From ee6baf38250db1ad5b1d172c2e2359a530796767 Mon Sep 17 00:00:00 2001
+From cff0bdebdba2f4b58cea37675036149afbc6054d Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Mon, 1 Sep 2025 18:06:59 +0200
 Subject: [PATCH 01/18] lib: Make function dtdCreate use macro MALLOC
@@ -46,7 +46,7 @@ index 38a2d96..3b7b96a 100644
 2.47.3
 
 
-From d46c509fee728b4dc3f462d9142372831499b431 Mon Sep 17 00:00:00 2001
+From 35dfa2129eda4d8117997f157e87f6eee6a4f670 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Mon, 1 Sep 2025 18:10:26 +0200
 Subject: [PATCH 02/18] lib: Make string pools use macros MALLOC, FREE, REALLOC
@@ -156,7 +156,7 @@ index 3b7b96a..38be275 100644
 2.47.3
 
 
-From 0a3463da62d5389f2369035ac4ee663f103c9f49 Mon Sep 17 00:00:00 2001
+From d4c11d27810518161ded0f11ce5e4481138e0623 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Mon, 1 Sep 2025 18:14:09 +0200
 Subject: [PATCH 03/18] lib: Make function hash tables use macros MALLOC and
@@ -285,7 +285,7 @@ index 38be275..afc8596 100644
 2.47.3
 
 
-From 61aaa027d8e2f729ba4119169459fdeb72d191ea Mon Sep 17 00:00:00 2001
+From da781b59a3a7dfd0216d0d98f223189779572036 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Mon, 1 Sep 2025 17:45:50 +0200
 Subject: [PATCH 04/18] lib: Make function copyString use macro MALLOC
@@ -348,7 +348,7 @@ index afc8596..09c1bb2 100644
 2.47.3
 
 
-From 400477c55680deb2e00c5b2f71847a05e1cbf547 Mon Sep 17 00:00:00 2001
+From 3a607f4dbb4ad4daef5259c2e78f8db83eb08941 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Mon, 1 Sep 2025 17:48:02 +0200
 Subject: [PATCH 05/18] lib: Make function dtdReset use macro FREE
@@ -413,7 +413,7 @@ index 09c1bb2..82f1849 100644
 2.47.3
 
 
-From f1646e2f166d5af79f0c2052f2467169c6413637 Mon Sep 17 00:00:00 2001
+From 10dfd8c4e1f915cc34ce194266631dede3d509c5 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Mon, 1 Sep 2025 17:50:59 +0200
 Subject: [PATCH 06/18] lib: Make function dtdDestroy use macro FREE
@@ -482,7 +482,7 @@ index 82f1849..0095ec5 100644
 2.47.3
 
 
-From b09fd90674c89eca8983c46f9e8735ebe4975a36 Mon Sep 17 00:00:00 2001
+From 2c003406951fb50356d85fb4de6fce2de96758d6 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Mon, 1 Sep 2025 17:52:58 +0200
 Subject: [PATCH 07/18] lib: Make function dtdCopy use macro MALLOC
@@ -535,7 +535,7 @@ index 0095ec5..094fa94 100644
 2.47.3
 
 
-From 31b5ece8ec73c3b04b2edf1128ef0061c7e3e5da Mon Sep 17 00:00:00 2001
+From e195a0c81e109a053a03f312f391cbb5bdbc4828 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Mon, 1 Sep 2025 17:34:58 +0200
 Subject: [PATCH 08/18] lib: Implement tracking of dynamic memory allocations
@@ -1084,7 +1084,7 @@ index ec88586..a8f5718 100644
 2.47.3
 
 
-From 33b1af76f4c1f12a0ffc145c169cf4ecaeaf1a5d Mon Sep 17 00:00:00 2001
+From 07a2645d1c6a86fad79ba83f761421c5b07de7dc Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Sun, 7 Sep 2025 12:18:08 +0200
 Subject: [PATCH 09/18] lib: Make XML_MemFree and XML_FreeContentModel match
@@ -1127,7 +1127,7 @@ index d13ab04..81239e2 100644
 2.47.3
 
 
-From 2d5a0d8c371b9132f9e1847356a7ff3a1f58cc6b Mon Sep 17 00:00:00 2001
+From 2d7b951fe7d39c1714b57771e48aa22106961716 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Sun, 7 Sep 2025 12:06:43 +0200
 Subject: [PATCH 10/18] lib: Exclude XML_Mem* functions from allocation
@@ -1182,7 +1182,7 @@ index 81239e2..b58aecb 100644
 2.47.3
 
 
-From a9c08c3d3213261ef941985f4a56722c7bf5213e Mon Sep 17 00:00:00 2001
+From 2b3ba777a6db74705ef0281600fa8a5ca97d4979 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Tue, 9 Sep 2025 21:34:28 +0200
 Subject: [PATCH 11/18] lib: Exclude the main input buffer from allocation
@@ -1249,7 +1249,7 @@ index b58aecb..e1708ed 100644
 2.47.3
 
 
-From 74d6e5abfae359aecf0b7a56e169a203d60d15ba Mon Sep 17 00:00:00 2001
+From c41be9893ed377e64e9d6f9445793436be0e9e59 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Thu, 11 Sep 2025 00:27:05 +0200
 Subject: [PATCH 12/18] lib: Exclude the content model from allocation tracking
@@ -1307,7 +1307,7 @@ index e1708ed..7776e81 100644
 2.47.3
 
 
-From b7ac41de5c63869f94093feb047d6fd876e4d571 Mon Sep 17 00:00:00 2001
+From c793354afa456c6251932f55f66bc6a96a3ea9f9 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Tue, 2 Sep 2025 22:36:49 +0200
 Subject: [PATCH 13/18] tests: Cover allocation tracking and limiting with
@@ -1618,16 +1618,17 @@ index 12ea3b2..47004a9 100644
 2.47.3
 
 
-From cb06b730245cc2094ab438888a939ecc05a8edaa Mon Sep 17 00:00:00 2001
+From f08223a7c21c0d17e98412bfbffdeb44f6650e21 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Tue, 2 Sep 2025 16:44:00 +0200
 Subject: [PATCH 14/18] xmlwf: Wire allocation tracker config to existing
  arguments -a and -b
 
 ---
- doc/xmlwf.xml | 26 ++++++++++++++++++++------
- xmlwf/xmlwf.c |  7 +++++--
- 2 files changed, 25 insertions(+), 8 deletions(-)
+ doc/xmlwf.xml          | 26 ++++++++++++++++++++------
+ xmlwf/xmlwf.c          |  7 +++++--
+ xmlwf/xmlwf_helpgen.py |  4 ++--
+ 3 files changed, 27 insertions(+), 10 deletions(-)
 
 diff --git a/doc/xmlwf.xml b/doc/xmlwf.xml
 index 17e9cf5..65d8ae9 100644
@@ -1716,11 +1717,31 @@ index 7c0a8cd..aba3942 100644
  #else
        (void)attackThresholdBytes; // silence -Wunused-but-set-variable
  #endif
+diff --git a/xmlwf/xmlwf_helpgen.py b/xmlwf/xmlwf_helpgen.py
+index 3d32f5d..e28dd5c 100755
+--- a/xmlwf/xmlwf_helpgen.py
++++ b/xmlwf/xmlwf_helpgen.py
+@@ -74,13 +74,13 @@ output_mode.add_argument('-m', action='store_true', help='write [m]eta XML, not
+ output_mode.add_argument('-t', action='store_true', help='write no XML output for [t]iming of plain parsing')
+ output_related.add_argument('-N', action='store_true', help='enable adding doctype and [n]otation declarations')
+ 
+-billion_laughs = parser.add_argument_group('billion laughs attack protection',
++billion_laughs = parser.add_argument_group('amplification attack protection (e.g. billion laughs)',
+                                            description='NOTE: '
+                                                        'If you ever need to increase these values '
+                                                        'for non-attack payload, please file a bug report.')
+ billion_laughs.add_argument('-a', metavar='FACTOR',
+                             help='set maximum tolerated [a]mplification factor (default: 100.0)')
+-billion_laughs.add_argument('-b', metavar='BYTES', help='set number of output [b]ytes needed to activate (default: 8 MiB)')
++billion_laughs.add_argument('-b', metavar='BYTES', help='set number of output [b]ytes needed to activate (default: 8 MiB/64 MiB)')
+ 
+ reparse_deferral = parser.add_argument_group('reparse deferral')
+ reparse_deferral.add_argument('-q', metavar='FACTOR',
 -- 
 2.47.3
 
 
-From 2971aa307f4ce6f7cc2c7ea8ccb48f298ea7d2d7 Mon Sep 17 00:00:00 2001
+From cc24c356c7205ca7a5537a0028c228e44542aeec Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Wed, 3 Sep 2025 17:06:41 +0200
 Subject: [PATCH 15/18] fuzz: Be robust towards NULL return from
@@ -1809,7 +1830,7 @@ index cfc4af2..580fe75 100644
 2.47.3
 
 
-From 4266e5898cdfc9e1666d3e77e1ed98b1dafd7347 Mon Sep 17 00:00:00 2001
+From 5f921e24ae7af7925746f9bf87c6504cc13adb9a Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Wed, 3 Sep 2025 01:28:03 +0200
 Subject: [PATCH 16/18] docs: Document the two allocation tracking API
@@ -1957,7 +1978,7 @@ index 2b3bd39..abb3353 100644
 2.47.3
 
 
-From bef6875fa4ddf58cca56318d6d49ec018907a4f3 Mon Sep 17 00:00:00 2001
+From d663c6312536b8901153a02dffe20c36f5408b34 Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Wed, 10 Sep 2025 19:52:39 +0200
 Subject: [PATCH 17/18] docs: Promote the contract to call XML_FreeContentModel
@@ -1985,7 +2006,7 @@ index abb3353..541b007 100644
 2.47.3
 
 
-From 3ec51ab414e8fae518cb9625de0f9b26d8afbe0a Mon Sep 17 00:00:00 2001
+From 070fe96c2ce12e847701a6b1be0503f299cd535d Mon Sep 17 00:00:00 2001
 From: Sebastian Pipping <sebastian@pipping.org>
 Date: Sun, 7 Sep 2025 16:00:35 +0200
 Subject: [PATCH 18/18] Changes: Document allocation tracking
