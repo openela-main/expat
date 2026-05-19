@@ -1,11 +1,10 @@
-%global unversion 2_5_0
-
 Summary: An XML parser library
 Name: expat
-Version: %(echo %{unversion} | sed 's/_/./g')
-Release: 5%{?dist}.1
-Source: https://github.com/libexpat/libexpat/archive/R_%{unversion}.tar.gz#/expat-%{version}.tar.gz
+Version: 2.5.0
+Release: 6%{?dist}
+Source: https://github.com/libexpat/libexpat/archive/R_2_5_0.tar.gz#/expat-%{version}.tar.gz
 URL: https://libexpat.github.io/
+VCS: git:https://github.com/libexpat/libexpat.git
 License: MIT
 BuildRequires: autoconf, libtool, xmlto, gcc-c++
 BuildRequires: make
@@ -23,7 +22,7 @@ Patch4: expat-2.5.0-CVE-2024-45492.patch
 Patch5: expat-2.5.0-CVE-2024-50602.patch
 # https://issues.redhat.com/browse/RHEL-57489
 Patch6: expat-2.5.0-CVE-2024-8176.patch
-# https://issues.redhat.com/browse/RHEL-114644
+# https://issues.redhat.com/browse/RHEL-114643
 Patch7: expat-2.5.0-CVE-2025-59375.patch
 
 %description
@@ -51,7 +50,7 @@ The expat-static package contains the static version of the expat library.
 Install it if you need to link statically with expat.
 
 %prep
-%setup -q -n libexpat-R_%{unversion}/expat
+%setup -q -n libexpat-R_2_5_0/expat
 pushd ..
 %patch0 -p1 -b .CVE-2023-52425
 %patch1 -p1 -b .CVE-2024-28757
@@ -109,9 +108,9 @@ make check
 %{_libdir}/lib*.a
 
 %changelog
-* Tue Nov 25 2025 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-5.1
+* Tue Dec 02 2025 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-6
 - Fix CVE-2025-59375
-- Resolves: RHEL-114644
+- Resolves: RHEL-114643
 
 * Mon Mar 31 2025 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-5
 - Fix CVE-2024-8176
