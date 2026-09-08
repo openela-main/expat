@@ -3,7 +3,7 @@
 Summary: An XML parser library
 Name: expat
 Version: %(echo %{unversion} | sed 's/_/./g')
-Release: 2%{?dist}
+Release: 2%{?dist}.2
 Source: https://github.com/libexpat/libexpat/archive/R_%{unversion}.tar.gz#/expat-%{version}.tar.gz
 URL: https://libexpat.github.io/
 License: MIT
@@ -28,6 +28,12 @@ Patch7: expat-2.5.0-CVE-2025-59375.patch
 # https://issues.redhat.com/browse/RHEL-177979
 # https://github.com/libexpat/libexpat/pull/1216
 Patch8: expat-2.5.0-CVE-2026-45186.patch
+# https://issues.redhat.com/browse/RHEL-220979
+# https://github.com/libexpat/libexpat/pull/1246
+Patch9: expat-2.5.0-CVE-2026-50219.patch
+# https://issues.redhat.com/browse/RHEL-221012
+# https://github.com/libexpat/libexpat/pull/1272
+Patch10: expat-2.5.0-CVE-2026-56132.patch
 
 %description
 This is expat, the C library for parsing XML, written by James Clark. Expat
@@ -65,6 +71,8 @@ pushd ..
 %patch6 -p1 -b .CVE-2024-8176
 %patch7 -p1 -b .CVE-2025-59375
 %patch8 -p1 -b .CVE-2026-45186
+%patch9 -p1 -b .CVE-2026-50219
+%patch10 -p1 -b .CVE-2026-56132
 popd
 
 sed -i 's/install-data-hook/do-nothing-please/' lib/Makefile.am
@@ -114,6 +122,14 @@ make check
 %{_libdir}/lib*.a
 
 %changelog
+* Fri Jul 31 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-2.2
+- Fix CVE-2026-56132: out-of-bound scaffolding index store in doProlog
+- Resolves: RHEL-221012
+
+* Fri Jul 31 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-2.1
+- Fix CVE-2026-50219
+- Resolves: RHEL-220979
+
 * Thu May 28 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-2
 - Fix CVE-2026-45186
 - Resolves: RHEL-177979
