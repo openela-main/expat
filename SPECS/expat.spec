@@ -1,7 +1,7 @@
 Summary: An XML parser library
 Name: expat
 Version: 2.5.0
-Release: 6%{?dist}.7
+Release: 9%{?dist}.4
 Source: https://github.com/libexpat/libexpat/archive/R_2_5_0.tar.gz#/expat-%{version}.tar.gz
 URL: https://libexpat.github.io/
 VCS: git:https://github.com/libexpat/libexpat.git
@@ -24,25 +24,25 @@ Patch5: expat-2.5.0-CVE-2024-50602.patch
 Patch6: expat-2.5.0-CVE-2024-8176.patch
 # https://issues.redhat.com/browse/RHEL-114643
 Patch7: expat-2.5.0-CVE-2025-59375.patch
-# https://issues.redhat.com/browse/RHEL-177988
+# https://issues.redhat.com/browse/RHEL-177978
 # https://github.com/libexpat/libexpat/pull/1216
 Patch8: expat-2.5.0-CVE-2026-45186.patch
-# https://issues.redhat.com/browse/RHEL-220981
+# https://issues.redhat.com/browse/RHEL-220984
 # https://github.com/libexpat/libexpat/pull/1246
 Patch9: expat-2.5.0-CVE-2026-50219.patch
-# https://issues.redhat.com/browse/RHEL-221014
+# https://issues.redhat.com/browse/RHEL-221013
 # https://github.com/libexpat/libexpat/pull/1272
 Patch10: expat-2.5.0-CVE-2026-56132.patch
-# https://issues.redhat.com/browse/RHEL-269002
+# https://issues.redhat.com/browse/RHEL-269003
 # https://github.com/libexpat/libexpat/pull/1282
 Patch11: expat-2.5.0-CVE-2026-93990.patch
-# https://issues.redhat.com/browse/RHEL-260179
+# https://issues.redhat.com/browse/RHEL-260200
 # https://github.com/libexpat/libexpat/pull/1321
 Patch12: expat-2.5.0-CVE-2026-66046.patch
-# https://issues.redhat.com/browse/RHEL-277510
+# https://issues.redhat.com/browse/RHEL-285731
 # https://github.com/libexpat/libexpat/pull/1393
 Patch13: expat-2.5.0-CVE-2026-77214.patch
-# https://issues.redhat.com/browse/RHEL-272833
+# https://issues.redhat.com/browse/RHEL-272834
 # https://github.com/libexpat/libexpat/pull/1392
 Patch14: expat-2.5.0-CVE-2026-102633.patch
 
@@ -136,35 +136,35 @@ make check
 %{_libdir}/lib*.a
 
 %changelog
-* Mon Oct 12 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-6.7
+* Tue Oct 20 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-9.4
 - CVE-2026-102633 expat: expat: Denial of Service via integer overflow
   in expat_realloc
-- Resolves: RHEL-272833
+- Resolves: RHEL-272834
 
-* Mon Oct 12 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-6.6
+* Tue Oct 20 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-9.3
 - CVE-2026-77214 expat: expat: Information disclosure via heap buffer over-read in XML_ParseBuffer
   over-read in XML_ParseBuffer
-- Resolves: RHEL-277510
+- Resolves: RHEL-285731
 
-* Thu Sep 24 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-6.5
+* Tue Sep 29 2026 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-9.2
 - Fix CVE-2026-66046: dtdCopy out-of-bounds access via isCdata hash lookup
-- Resolves: RHEL-260179
+- Resolves: RHEL-260200
 
-* Thu Sep 24 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-6.4
+* Tue Sep 29 2026 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-9.1
 - CVE-2026-93990 expat: Expat: XML Injection via Malformed UTF-16 Input
-- Resolves: RHEL-269002
+- Resolves: RHEL-269003
 
-* Tue Aug 25 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-6.3
+* Fri Sep 11 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-9
 - Fix CVE-2026-56132: out-of-bound scaffolding index store in doProlog
-- Resolves: RHEL-221014
+- Resolves: RHEL-221013
 
-* Tue Aug 04 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-6.2
+* Fri Sep 11 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-8
 - Fix CVE-2026-50219
-- Resolves: RHEL-220981
+- Resolves: RHEL-220984
 
-* Wed May 27 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-6.1
+* Tue Jul 14 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-7
 - Fix CVE-2026-45186
-- Resolves: RHEL-177988
+- Resolves: RHEL-177978
 
 * Tue Dec 02 2025 Tomas Korbar <tkorbar@redhat.com> - 2.5.0-6
 - Fix CVE-2025-59375
