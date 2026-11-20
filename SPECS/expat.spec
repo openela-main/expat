@@ -1,7 +1,7 @@
 Summary: An XML parser library
 Name: expat
 Version: 2.5.0
-Release: 9%{?dist}.4
+Release: 9%{?dist}.8
 Source: https://github.com/libexpat/libexpat/archive/R_2_5_0.tar.gz#/expat-%{version}.tar.gz
 URL: https://libexpat.github.io/
 VCS: git:https://github.com/libexpat/libexpat.git
@@ -45,6 +45,19 @@ Patch13: expat-2.5.0-CVE-2026-77214.patch
 # https://issues.redhat.com/browse/RHEL-272834
 # https://github.com/libexpat/libexpat/pull/1392
 Patch14: expat-2.5.0-CVE-2026-102633.patch
+# https://issues.redhat.com/browse/RHEL-290462
+# https://github.com/libexpat/libexpat/pull/1433
+# https://github.com/libexpat/libexpat/pull/1439
+Patch15: expat-2.5.0-CVE-2026-115506.patch
+# https://issues.redhat.com/browse/RHEL-293717
+# https://github.com/libexpat/libexpat/pull/1444
+Patch16: expat-2.5.0-CVE-2026-117610.patch
+# https://issues.redhat.com/browse/RHEL-293720
+# https://github.com/libexpat/libexpat/pull/1450
+Patch17: expat-2.5.0-CVE-2026-118370.patch
+# https://issues.redhat.com/browse/RHEL-287361
+# https://github.com/libexpat/libexpat/pull/1431
+Patch18: expat-2.5.0-CVE-2026-113351.patch
 
 %description
 This is expat, the C library for parsing XML, written by James Clark. Expat
@@ -88,6 +101,10 @@ pushd ..
 %patch12 -p1 -b .CVE-2026-66046
 %patch13 -p1 -b .CVE-2026-77214
 %patch14 -p1 -b .CVE-2026-102633
+%patch15 -p1 -b .CVE-2026-115506
+%patch16 -p1 -b .CVE-2026-117610
+%patch17 -p1 -b .CVE-2026-118370
+%patch18 -p1 -b .CVE-2026-113351
 popd
 
 sed -i 's/install-data-hook/do-nothing-please/' lib/Makefile.am
@@ -136,6 +153,25 @@ make check
 %{_libdir}/lib*.a
 
 %changelog
+* Thu Nov 12 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-9.8
+- CVE-2026-113351 expat: expat: Denial of Service via improper memory
+  tracking in XML_ParserReset
+- Resolves: RHEL-287361
+
+* Thu Nov 12 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-9.7
+- CVE-2026-118370 expat: expat: Denial of Service via integer overflow
+  during XML attribute parsing
+- Resolves: RHEL-293720
+
+* Thu Nov 12 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-9.6
+- CVE-2026-117610 expat: expat: Denial of Service via NULL pointer
+  dereference in external entity parsing
+- Resolves: RHEL-293717
+
+* Thu Nov 12 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-9.5
+- CVE-2026-115506 expat: expat: Denial of Service via delayed entity amplification detection
+- Resolves: RHEL-290462
+
 * Tue Oct 20 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.5.0-9.4
 - CVE-2026-102633 expat: expat: Denial of Service via integer overflow
   in expat_realloc
